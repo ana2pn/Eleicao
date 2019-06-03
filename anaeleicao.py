@@ -159,10 +159,22 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
     def inserirVP(self, valor):
         super().inserir(valor)
         novonoh.setcor(vermelho)
+        self.ajustar_insercao()
 
-    def ajustar_insercao(self):
+    def ajustar_insercao(self, z):
         while valor.getpai().getcor() == vermelho:
             if valor.pai() == valor.getpai().getpai().getesquerdo():
                 y = valor.getpai().getpai().getdireito()
                 if y.setcor(vermelho):
+                    z.getpai().setcor(preto)
+                    y.setcor(preto)
+                    #################
+                    z = z.getpai().getpai()
+                else:
+                    if z == z.getpai().getdireita():
+                        self.rotacaoesquerda(raiz, z)
+                        z.getpai().setcor(preto)
+                        z.getpai().getpai().setcor(vermelho)
+                        self.rotacaodireita(raiz, z.getpai().getpai())
+
 
