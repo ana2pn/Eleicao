@@ -40,6 +40,13 @@ class noh:
 class ArvoredeBuscaBinaria:
     def __init__(self):
         self._raiz = None
+        self._nil = None
+
+    def getnil(self):
+        return self._nil
+
+    def setnil(self, nil):
+        self._nil = nil
 
     def getraiz(self):
         return self._raiz
@@ -170,10 +177,28 @@ class ArvoredeBuscaBinaria:
         return y
 
 class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
-    def inserirVP(self, valor):
 
-        novonoh.setcor(vermelho)
-        self.ajustar_insercao(valor)
+
+    def inserirVP(self, z):
+        y = self.getnil()
+        x = self.getraiz()
+        while x is not self.getnil():
+            y = x
+            if z.getvalor() < x.getvalor():
+                x = x.getesquerda()
+            else:
+                x = x.direita()
+        z.getpai().setvalor(y)
+        if y == self.getnil():
+            self.setraiz(z)
+        elif z.getvalor() < x.getvalor():
+            y.setesquerdo(z)
+        else:
+            y.setdireito(z)
+        z.setesquerdo(self.getnil())
+        z.setdireito(self.getnil())
+        z.setcor(vermelho)
+        self.ajustar_insercao(z)
 
     def rotacaoesquerda(self, x):
         #self.NONE = NIL
