@@ -4,13 +4,6 @@ class noh:
         self._esquerdo = None
         self._direito = None
         self._pai = None
-        self._cor = None
-
-    def getcor(self):
-        return self._cor
-
-    def setcor(self, cor):
-        self._cor = cor
 
     def getvalor(self):
         return self._valor
