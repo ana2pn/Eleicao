@@ -1,16 +1,17 @@
+
 class noh:
     def __init__(self, valor):
         self._valor = valor
         self._esquerdo = None
         self._direito = None
         self._pai = None
-        self._cor = None
+        self._vermelho = False
 
-    def getcor(self):
-        return self._cor
+    def setvermelho(self, cor=True):
+        self._vermelho = cor
 
-    def setcor(self, cor):
-        self._cor = cor
+    def getvermelho(self):
+        return self._vermelho
 
     def getvalor(self):
         return self._valor
@@ -41,6 +42,7 @@ class ArvoredeBuscaBinaria:
     def __init__(self):
         self._raiz = None
         self._nil = None
+
 
     def getnil(self):
         return self._nil
@@ -178,16 +180,18 @@ class ArvoredeBuscaBinaria:
 
 class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
 
-
     def inserirVP(self, z):
+        z = noh(z)
         y = self.getnil()
         x = self.getraiz()
+
         while x is not self.getnil():
             y = x
             if z.getvalor() < x.getvalor():
                 x = x.getesquerda()
             else:
                 x = x.direita()
+
         z.getpai().setvalor(y)
         if y == self.getnil():
             self.setraiz(z)
@@ -197,11 +201,10 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
             y.setdireito(z)
         z.setesquerdo(self.getnil())
         z.setdireito(self.getnil())
-        z.setcor(vermelho)
+        z.setvermelho(True)
         self.ajustar_insercao(z)
 
     def rotacaoesquerda(self, x):
-        #self.NONE = NIL
         y = x.getdireito()
         x.setdireito(y.getesquerdo())
         if y.getesquerdo() is not None:
@@ -234,34 +237,39 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
         y.setpai(x)
 
     def ajustar_insercao(self, z):
-        while z.getpai().getcor() == vermelho:
+        while z.getpai().getvermelho():
             if z.pai() == z.getpai().getpai().getesquerdo():
                 y = z.getpai().getpai().getdireito()
-                if y.getcor() == vermelho:
-                    z.getpai().setcor(preto)
-                    y.setcor(preto)
-                    z.getpai().getpai().setcor(vermelho)
+                if y.getvermelho():
+                    z.getpai().setvermelho(False)
+                    y.setvermelho(False)
+                    z.getpai().getpai().setvermelho(True)
                     z = z.getpai().getpai()
                 else:
                     if z == z.getpai().getdireita():
                         z = z.getpai()
-                        self.rotacaoesquerda( z)
-                    z.getpai().setcor(preto)
-                    z.getpai().getpai().setcor(vermelho)
+                        self.rotacaoesquerda(z)
+                    z.getpai().setvermelho(False)
+                    z.getpai().getpai().setvermelho(True)
                     self.rotacaodireita(z.getpai().getpai())
             else:
                 y = z.getpai().getpai().getesquerdo()
-                if y.setcor(vermelho):
-                    z.getpai().setcor(preto)
-                    y.setcor(preto)
-                    z.getpai().getpai().setcor(vermelho)
+                if y.getvermelho():
+                    z.getpai().setvermeho(False)
+                    y.setvermelho(False)
+                    z.getpai().getpai().setvermleho(True)
                     z = z.getpai().getpai()
                 else:
                     if z == z.getpai().getesquerdo():
                         z = z.getpai()
                         self.rotacaodireita(z)
-                    z.getpai().setcor(preto)
-                    z.getpai().getpai().setcor(vermelho)
+                    z.getpai().setvermelho(False)
+                    z.getpai().getpai().setvermelho(True)
                     self.rotacaoesquerda(z.getpai().getpai())
+        self._raiz().setvermelho(False)
 
 arvoreVP = ArvoreVermelhaePreta()
+elementos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+for i in elementos:
+    arvoreVP.inserirVP(i)
+arvoreVP.preorder(arvoreVP.getraiz())
