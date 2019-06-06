@@ -79,15 +79,15 @@ class ArvoredeBuscaBinaria:
     def ehfilhodireito(self, no):
         if no is not None:
             if no is not self.getraiz():
-                if no.getvalor() == no.getpai().getdireito():
-                    return no.getvalor()
+                if no == no.getpai().getdireito():
+                    return True
         return None
 
     def ehfilhoesquerdo(self, no):
         if no is not None:
             if no is not self.getraiz():
-                if no.getvalor() == no.getpai().getesquerdo():
-                    return no.getvalor()
+                if no == no.getpai().getesquerdo():
+                    return True
         return None
 
     def inserir(self, valor):
@@ -128,7 +128,6 @@ class ArvoredeBuscaBinaria:
                 return None
 
         return i
-    '''
     def preorder(self, no):
         if no is not self.getnil():
             print(no.getvalor(), end= " ")
@@ -147,7 +146,6 @@ class ArvoredeBuscaBinaria:
             self.inorder(no.getesquerdo())
             print(no.getvalor(), end=" ")
             self.inorder(no.getdireito())
-    '''
 
     def minimo(self, valor):
         while valor.getesquerdo() is not None:
@@ -197,12 +195,12 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
         y = self.getnil()
         x = self.getraiz()
 
-        while x is not self.getnil():
+        while x is not None:
             y = x
             if z.getvalor() < x.getvalor():
-                x = x.getesquerda()
+                x = x.getesquerdo()
             else:
-                x = x.direita()
+                x = x.direito()
 
         z.getpai().setvalor(y)
         if y == self.getnil():
@@ -234,7 +232,7 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
                     else:
                         pai=new_pai
                 else:
-                    new_pai=pai.getdireito()
+                    new_pai = pai.getdireito()
                     if new_pai is self.getnil():
                         break
                     else:
@@ -248,21 +246,21 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
             no.setesquerdo(self.getnil())
 
             self.ajustar_insercao(no)
-    def rotacaoesquerda(self, x):
-        y = x.getdireito()
-        x.setdireito(y.getesquerdo())
+    def rotacaoesquerda(self, no):
+        y = no.getdireito()
+        no.setdireito(y.getesquerdo())
         if y.getesquerdo() is not self.getnil():
-            y.getesquerdo().setpai(x)
-        y.setpai(x.getpai())
-        if x.getpai() is self.getnil():
+            y.getesquerdo().setpai(no)
+        y.setpai(no.getpai())
+        if no.getpai() is self.getnil():
             self.setraiz(y)
         else:
-            if self.ehfilhoesquerdo(x):
-                x.getpai().setesquerdo(y)
+            if self.ehfilhoesquerdo(no):
+                no.getpai().setesquerdo(y)
             else:
-                x.getpai().setdireito(y)
-        y.setesquerdo(x)
-        x.setpai(y)
+                no.getpai().setdireito(y)
+        y.setesquerdo(no)
+        no.setpai(y)
 
     def rotacaodireita(self, y):
         x = y.getesquerdo()
@@ -316,4 +314,4 @@ arvoreVP = ArvoreVermelhaePreta()
 elementos = [35,21,32,12,23,54,11,31,40]
 for i in elementos:
     arvoreVP.inserir_jaime(i)
-#arvoreVP.preorder(arvoreVP.getraiz())
+arvoreVP.preorder(arvoreVP.getraiz())
