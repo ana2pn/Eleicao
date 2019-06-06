@@ -190,31 +190,7 @@ class ArvoredeBuscaBinaria:
 
 class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
 
-    def inserirVP(self, z):
-        z = noh(z)
-        y = self.getnil()
-        x = self.getraiz()
-
-        while x is not None:
-            y = x
-            if z.getvalor() < x.getvalor():
-                x = x.getesquerdo()
-            else:
-                x = x.direito()
-
-        z.getpai().setvalor(y)
-        if y == self.getnil():
-            self.setraiz(z)
-        elif z.getvalor() < x.getvalor():
-            y.setesquerdo(z)
-        else:
-            y.setdireito(z)
-        z.setesquerdo(self.getnil())
-        z.setdireito(self.getnil())
-        z.setvermelho(True)
-        self.ajustar_insercao(z)
-
-    def inserir_jaime(self, valor):
+    def inserirVP(self, valor):
         no=noh(valor)
         pai=self.getraiz()
         if pai is None:
@@ -313,5 +289,5 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
 arvoreVP = ArvoreVermelhaePreta()
 elementos = [35,21,32,12,23,54,11,31,40]
 for i in elementos:
-    arvoreVP.inserir_jaime(i)
+    arvoreVP.inserirVP(i)
 arvoreVP.preorder(arvoreVP.getraiz())
