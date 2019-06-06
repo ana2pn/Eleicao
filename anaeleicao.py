@@ -46,6 +46,11 @@ class Nil():
     def __init__(self):
         self._valor = None
         self._vermelho = False
+    def getvermelho(self):
+        return False
+
+    def __str__(self):
+        return 'None preto'
 
 class ArvoredeBuscaBinaria:
     def __init__(self):
@@ -55,9 +60,6 @@ class ArvoredeBuscaBinaria:
 
     def getnil(self):
         return self._nil
-
-    def setnil(self, nil):
-        self._nil = nil
 
     def getraiz(self):
         return self._raiz
@@ -248,10 +250,10 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
     def rotacaoesquerda(self, x):
         y = x.getdireito()
         x.setdireito(y.getesquerdo())
-        if y.getesquerdo() is not None:
+        if y.getesquerdo() is not self.getnil():
             y.getesquerdo().setpai(x)
         y.setpai(x.getpai())
-        if x.getpai() is None:
+        if x.getpai() is self.getnil():
             self.setraiz(y)
         else:
             if self.ehfilhoesquerdo(x):
@@ -264,10 +266,10 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
     def rotacaodireita(self, y):
         x = y.getesquerdo()
         y.setesquerdo(x.getdireito())
-        if x.getdireito() is not None:
+        if x.getdireito() is not self.getnil():
             x.getdireito().setpai(y)
         x.setpai(y.getpai())
-        if y.getpai() is None:
+        if y.getpai() is self.getnil():
             self.setraiz(x)
         else:
             if self.ehfilhodireito(y):
@@ -279,15 +281,15 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
 
     def ajustar_insercao(self, No):
         while No.getpai().getvermelho():
-            if No.pai() == No.getpai().getpai().getesquerdo():
-                y = No.getpai().getpai().getdireito()
+            if No.getpai() == No.getpai().getpai().getesquerdo(): #se o pai for filho esq
+                y = No.getpai().getpai().getdireito()# tio
                 if y.getvermelho():
                     No.getpai().setvermelho(False)
                     y.setvermelho(False)
                     No.getpai().getpai().setvermelho(True)
                     No = No.getpai().getpai()
                 else:
-                    if No == No.getpai().getdireita():
+                    if No == No.getpai().getdireito():
                         No = No.getpai()
                         self.rotacaoesquerda(No)
                     No.getpai().setvermelho(False)
