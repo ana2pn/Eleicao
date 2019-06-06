@@ -128,25 +128,26 @@ class ArvoredeBuscaBinaria:
                 return None
 
         return i
-
+    '''
     def preorder(self, no):
-        if no != None:
+        if no is not self.getnil():
             print(no.getvalor(), end= " ")
             self.preorder(no.getesquerdo())
             self.preorder(no.getdireito())
 
 
     def posorder(self, no):
-        if no != None:
+        if no is not self.getnil():
             self.posorder(no.getesquerdo())
             self.posorder(no.getdireito())
             print(no.getvalor(), end=" ")
 
     def inorder(self, no):
-        if no != None:
+        if no is not self.getnil():
             self.inorder(no.getesquerdo())
             print(no.getvalor(), end=" ")
             self.inorder(no.getdireito())
+    '''
 
     def minimo(self, valor):
         while valor.getesquerdo() is not None:
@@ -298,9 +299,9 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
             else:
                 y = No.getpai().getpai().getesquerdo()
                 if y.getvermelho():
-                    No.getpai().setvermeho(False)
+                    No.getpai().setvermelho(False)
                     y.setvermelho(False)
-                    No.getpai().getpai().setvermleho(True)
+                    No.getpai().getpai().setvermelho(True)
                     No = No.getpai().getpai()
                 else:
                     if No == No.getpai().getesquerdo():
@@ -315,4 +316,4 @@ arvoreVP = ArvoreVermelhaePreta()
 elementos = [35,21,32,12,23,54,11,31,40]
 for i in elementos:
     arvoreVP.inserir_jaime(i)
-arvoreVP.preorder(arvoreVP.getraiz())
+#arvoreVP.preorder(arvoreVP.getraiz())
