@@ -57,7 +57,6 @@ class ArvoredeBuscaBinaria:
         self._raiz = None
         self._nil = Nil()
 
-
     def getnil(self):
         return self._nil
 
@@ -69,7 +68,7 @@ class ArvoredeBuscaBinaria:
 
     def __str__(self):
         if self.ehVazio():
-            return 'The Tree is empty!'
+            return 'A arvore esta vazia!'
         else:
             return print("%d"+str(noh.getvalor()))
 
@@ -189,42 +188,42 @@ class ArvoredeBuscaBinaria:
         return y
 
 class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
-
     def inserirVP(self, valor):
-        no=noh(valor)
+        no=noh(valor)                               #Cria o objeto do novo no
         pai=self.getraiz()
-        if pai is None:
-            self.setraiz(no)
-            no.setvermelho(False)
-            no.setdireito(self.getnil())
+        if pai is None:                             #Verifica se a árvore esta vazia
+            self.setraiz(no)                        #o novo no passa a ser a raiz
+            no.setvermelho(False)                   #Faz a raiz ser preta
+            no.setdireito(self.getnil())            #direito esquerdo e pai apontam para nil
             no.setesquerdo(self.getnil())
             no.setpai(self.getnil())
-        else:
+        else:                                       #Caso a árvore não esteja vazia
             while True:
-                if valor<=pai.getvalor():
-                    new_pai=pai.getesquerdo()
+                if valor <= pai.getvalor():         #Verifica se o valor do no inserido é menor que o valor da raiz
+                    new_pai = pai.getesquerdo()
                     if new_pai is self.getnil():
-                        break
+                        break                        #O laço while é interrompido quando é encontrada uma posicao vazia para o novono
                     else:
-                        pai=new_pai
-                else:
+                        pai = new_pai
+                else:                                #O no inserido é maior que a raiz
                     new_pai = pai.getdireito()
                     if new_pai is self.getnil():
                         break
                     else:
-                        pai=new_pai
+                        pai = new_pai
             no.setpai(pai)
-            if valor<pai.getvalor():
+            if valor < pai.getvalor():
                 pai.setesquerdo(no)
             else:
                 pai.setdireito(no)
-            no.setdireito(self.getnil())
+            no.setdireito(self.getnil())                # Faz o ponteiro esquerdo e direito do no folha apontar para nil
             no.setesquerdo(self.getnil())
+            self.ajustar_insercao(no)                   #Chama a funcao ajustar_insercao para verificar e balancear a arvore vermelha e preta
 
-            self.ajustar_insercao(no)
+
     def rotacaoesquerda(self, no):
-        y = no.getdireito()
-        no.setdireito(y.getesquerdo())
+        y = no.getdireito()                             #Define y como sendo o filho direito do no recebido pela funcao
+        no.setdireito(y.getesquerdo())                  #O filho direito do no passa a ser a subarvore esquerda de y
         if y.getesquerdo() is not self.getnil():
             y.getesquerdo().setpai(no)
         y.setpai(no.getpai())
@@ -256,35 +255,35 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
 
     def ajustar_insercao(self, No):
         while No.getpai().getvermelho():
-            if No.getpai() == No.getpai().getpai().getesquerdo(): #se o pai for filho esq
-                y = No.getpai().getpai().getdireito()# tio
-                if y.getvermelho():
-                    No.getpai().setvermelho(False)
+            if No.getpai() == No.getpai().getpai().getesquerdo():   #verifica se o pai eh filho esquerdo do passado pela funcao
+                y = No.getpai().getpai().getdireito()               #y passa a ser o tio do no que desbalanceou a arvore
+                if y.getvermelho():                                 #Verifica se o tio do no eh vermelho
+                    No.getpai().setvermelho(False)                  #Faz o pai e o tio do no serem pretos e o avo de no ser vermelho(caso 1)
                     y.setvermelho(False)
                     No.getpai().getpai().setvermelho(True)
                     No = No.getpai().getpai()
-                else:
-                    if No == No.getpai().getdireito():
-                        No = No.getpai()
-                        self.rotacaoesquerda(No)
-                    No.getpai().setvermelho(False)
-                    No.getpai().getpai().setvermelho(True)
+                else:                                                #Caso em que o tio do no eh preto, o no e o pai do no sao vermelhos (caso 2)
+                    if No == No.getpai().getdireito():               #Verifica se o no eh filho direito do pai do no
+                        No = No.getpai()                             #Caso seja, eh executada uma rotacao dupla direita no pai do no
+                        self.rotacaoesquerda(No)                     #E caso não seja, apenas executa-se uma rotacao direita simples no avo do no
+                    No.getpai().setvermelho(False)                   #O pai do no passa a ser preto
+                    No.getpai().getpai().setvermelho(True)           #O avo do no passa a ser vermelho
                     self.rotacaodireita(No.getpai().getpai())
-            else:
-                y = No.getpai().getpai().getesquerdo()
-                if y.getvermelho():
-                    No.getpai().setvermelho(False)
+            else:                                                    #Caso em que o pai do no é filho direito do no que foi passado para funcao
+                y = No.getpai().getpai().getesquerdo()               #y passa a ser o tio do no passado para funcao
+                if y.getvermelho():                                  #Verifica se o tio do no eh vermelho
+                    No.getpai().setvermelho(False)                   #Faz o pai e o tio do no serem pretos e o avo de no ser vermelho(caso 1)
                     y.setvermelho(False)
                     No.getpai().getpai().setvermelho(True)
                     No = No.getpai().getpai()
                 else:
-                    if No == No.getpai().getesquerdo():
-                        No = No.getpai()
-                        self.rotacaodireita(No)
-                    No.getpai().setvermelho(False)
-                    No.getpai().getpai().setvermelho(True)
+                    if No == No.getpai().getesquerdo():             #Verifica se o no eh filho esquerdo do pai do no
+                        No = No.getpai()                            #Caso seja, eh executada uma rotacao dupla esquerda no pai do no
+                        self.rotacaodireita(No)                     #E caso nao seja apenas executa-se uma rotacao esquerda simples no avo do no
+                    No.getpai().setvermelho(False)                  #O pai do no passa a ser preto
+                    No.getpai().getpai().setvermelho(True)          #O avo do no passa a ser vermelho
                     self.rotacaoesquerda(No.getpai().getpai())
-        self.getraiz().setvermelho(False)
+        self.getraiz().setvermelho(False)                   #Depois de todos os ajustes, faz a raiz ser preta, independentemente de qualquer caso
 
 arvoreVP = ArvoreVermelhaePreta()
 elementos = [35,21,32,12,23,54,11,31,40]
