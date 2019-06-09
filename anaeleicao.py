@@ -111,7 +111,7 @@ class ArvoredeBuscaBinaria:
                 else:
                     i = i.getdireito()
         return novonoh
-    
+
 
     def procurar(self, valor):
         if self.getraiz() == None:
