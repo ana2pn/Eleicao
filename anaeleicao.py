@@ -111,8 +111,7 @@ class ArvoredeBuscaBinaria:
                 else:
                     i = i.getdireito()
         return novonoh
-
-
+    
 
     def procurar(self, valor):
         if self.getraiz() == None:
@@ -125,16 +124,16 @@ class ArvoredeBuscaBinaria:
                 i = i.getdireito()
             if i == None:
                 return None
-
         return i
-    def preorder(self, no):
+
+    def preorder(self, no):                     #Exibe os valores dos nós em preordem
         if no is not self.getnil():
             print(no.getvalor(), end= " ")
             self.preorder(no.getesquerdo())
             self.preorder(no.getdireito())
 
 
-    def posorder(self, no):
+    def posorder(self, no):                     #Exibe os valores dos nós em posordem
         if no is not self.getnil():
             self.posorder(no.getesquerdo())
             self.posorder(no.getdireito())
@@ -147,12 +146,12 @@ class ArvoredeBuscaBinaria:
             self.inorder(no.getdireito())
 
     def minimo(self, valor):
-        while valor.getesquerdo() is not None:
+        while valor.getesquerdo() is not self.getnil():
             valor = valor.getesquerdo()
         return valor
 
     def maximo (self, valor):
-        while valor.getdireito() is not None:
+        while valor.getdireito() is not self.getnil():
             valor = valor.getdireito()
         return valor
 
@@ -164,6 +163,30 @@ class ArvoredeBuscaBinaria:
             value = y
             y = y.getpai()
         return y
+
+    def predecessor(self, no):
+        if no is not None:
+            if no.getesquerdo() is not self.getnil() and no.getesquerdo().getvalor() != no.getvalor():
+                return self.maximo(no.getesquerdo())
+
+            elif no.getesquerdo() is not self.getnil() and no.getesquerdo().getvalor() == no.getvalor():
+                no_2 = no.getesquerdo()
+                while no_2.getesquerdo() is not self.getnil() and no_2.getesquerdo().getvalor() == no.getvalor():
+                    no_2 = no_2.getesquerdo()
+                if no_2.getesquerdo() is not self.getnil():
+                    return self.maximo(no_2.getesquerdo())
+                else:
+                    if no.getpai() != no:
+                        return no.getpai()
+                    else:
+                        self.predecessor(no.getpai())
+
+            else:
+                if no.getpai().getvalor() != no.getvalor():
+                    return no.getpai()
+                else:
+                    self.predecessor(no.getpai())
+
 
     def remover(self, v):
         if v.getesquerdo() == None or v.getdireito() == None:
@@ -211,8 +234,8 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
                         break
                     else:
                         pai = new_pai
-            no.setpai(pai)
-            if valor < pai.getvalor():
+            no.setpai(pai)                              #Faz o ponteiro do no apontar para o pai do no
+            if valor < pai.getvalor():                  #Faz o ponteiro do pai apontar para o no adicionado seja ele esquerdo ou direito
                 pai.setesquerdo(no)
             else:
                 pai.setdireito(no)
@@ -283,10 +306,85 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
                     No.getpai().setvermelho(False)                  #O pai do no passa a ser preto
                     No.getpai().getpai().setvermelho(True)          #O avo do no passa a ser vermelho
                     self.rotacaoesquerda(No.getpai().getpai())
-        self.getraiz().setvermelho(False)                   #Depois de todos os ajustes, faz a raiz ser preta, independentemente de qualquer caso
+        self.getraiz().setvermelho(False)                           #Depois de todos os ajustes, faz a raiz ser preta, independentemente de qualquer caso
+
+
+    def remover_rb(self, z):
+        if z.getesquerdo() is self.getnil() or z.getdireito() is self.getnil():
+            y = z
+        else:
+            y = self.predecessor(z)
+        if y.getesquerdo() is not self.getnil():
+            x = y.getesquerdo()
+        else:
+            x = y.getdireito()
+        #x.setpai(y.getpai())                           #Linha que existe no pseudo-código, mas quando descomentada dá erro e comentada funciona
+        if y.getpai() is self.getnil():
+            self.setraiz(x)
+        else:
+            if y == y.getpai().getesquerdo():
+                y.getpai().setesquerdo(x)
+            else:
+                y.getpai().setdireito(x)
+        if y != z:
+            z.setvalor(y.getvalor())
+        if y.getvermelho is False:
+            self.remover_rb_ajuste(x)
+        return y
+
+    def remover_rb_ajuste(self, no_fixup):
+        while no_fixup != self.getraiz() and no_fixup.getvermelho() is False:
+            if no_fixup == no_fixup.getpai().getesquerdo():
+                w = no_fixup.getpai().getdireito()
+                if w.getvermelho() is True:
+                    w.setvermelho(False)
+                    no_fixup.getpai().setvermelho(True)
+                    self.rotacaoesquerda(no_fixup.getpai())
+                    w = no_fixup.getpai().getdireito()
+                if w.getesquerdo().getvermelho() is False and w.getdireito().getvermelho() is False:
+                    w.setvermelho(True)
+                    no_fixup = no_fixup.getpai()
+                else:
+                    if w.getdireito().getvermelho() is False:
+                        w.getesquerdo().setvermelho(False)
+                        w.setvermelho(True)
+                        self.rotacaodireita(w)
+                        w = no_fixup.getpai().getdireito()
+                        w.setvermelho(no_fixup.getpai().getvermelho())
+                        no_fixup.getpai().setvermelho(False)
+                        w.getdireito().setvermelho(False)
+                        self.rotacaoesquerda(no_fixup.getpai())
+                        no_fixup = self.getraiz()
+            else:
+                w = no_fixup.getpai().getesquerdo()
+                if w.getvermelho() is True:
+                    w.setvermelho(False)
+                    no_fixup.getpai().setvermelho(True)
+                    self.rotacaodireita(no_fixup.getpai())
+                    w = no_fixup.getpai().getesquerdo()
+                if w.getdireito().getvermelho() is False and w.getesquerdo().getvermelho() is False:
+                    w.setvermelho(True)
+                    no_fixup = no_fixup.getpai()
+                else:
+                    if w.getdireito().getvermelho() is False:
+                        w.getdireito().setvermelho(False)
+                        w.setvermelho(True)
+                        self.rotacaoesquerda(w)
+                        w = no_fixup.getpai().getesquerdo()
+                        w.setvermelho(no_fixup.getpai().getvermelho())
+                        no_fixup.getpai().setvermelho(False)
+                        w.getesquerdo().setvermelho(False)
+                        self.rotacaodireita(no_fixup.getpai())
+                        no_fixup = self.getraiz()
+        no_fixup.setvervmelho(False)
 
 arvoreVP = ArvoreVermelhaePreta()
-elementos = [35,21,32,12,23,54,11,31,40]
+elementos = [35, 21, 32, 12, 23, 54, 11, 31, 40]
 for i in elementos:
     arvoreVP.inserirVP(i)
+arvoreVP.preorder(arvoreVP.getraiz())
+
+arvoreVP.remover_rb(arvoreVP.procurar(32))
+print()
+print()
 arvoreVP.preorder(arvoreVP.getraiz())
