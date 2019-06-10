@@ -378,13 +378,93 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
                         no_fixup = self.getraiz()
         no_fixup.setvervmelho(False)
 
-arvoreVP = ArvoreVermelhaePreta()
-elementos = [35, 21, 32, 12, 23, 54, 11, 31, 40]
-for i in elementos:
-    arvoreVP.inserirVP(i)
-arvoreVP.preorder(arvoreVP.getraiz())
+from random import randint
+arvore_de_eleitores = ArvoreVermelhaePreta()
+arvore_de_votacao = ArvoredeBuscaBinaria()
 
-arvoreVP.remover_rb(arvoreVP.procurar(32))
-print()
-print()
-arvoreVP.preorder(arvoreVP.getraiz())
+for i in range(20):
+    arvore_de_eleitores.inserirVP(randint(1000,9999))
+arvore_de_eleitores.preorder(arvore_de_eleitores.getraiz())
+
+def IniciarMenu():
+    print("☆"*25)
+    print("\t\tSistema de Eleição")
+    print("☆"* 25)
+    print()
+    print("1- Cadastrar Titulos")
+    print("2- Votação")
+    print("Digite o número da sua opção: ", end="")
+    op_menu= int(input())
+    if op_menu==1:
+        print("☆☆☆☆☆☆☆☆☆☆☆☆☆ Titulo ☆☆☆☆☆☆☆☆☆☆☆☆☆\nPor favor, escolha uma opção abaixo:\n ")
+        print("\t1- Cadastrar Título \n\t2- Descadastrar Título \n \t3- Carregar Títulos \n \t4- Descadastrar usuário ")
+        print("\t5-Voltar \n\t\t Digite o número da sua opção: ", end="")
+        OpcaoMenuTitulo(int(input()))
+    elif op_menu ==2:
+        print("☆☆☆☆☆☆☆☆☆☆☆☆☆ Votação ☆☆☆☆☆☆☆☆☆☆☆☆☆\nPor favor, escolha uma opção abaixo:\n ")
+        print("\t1- Cadastrar Candidatos\n\t2- Nova Votação\n\t3- Adicionar Voto\n\t4- Gerar Votos Aleatórios")
+        print("\t5- Resultado Parcial da Eleição\n\t6- Voltar\n\t0-Sair\n\t\t Digite o número da sua opção: ", end="")
+        OpcaoMenuVotacao(int(input()))
+
+def OpcaoMenuTitulo(entrada):
+
+    if entrada == 1:
+        CadastrarTitulo()
+    elif entrada == 2:
+        DescadastrarTitulo()
+    elif entrada == 3:
+        CarregarTitulos()
+    elif entrada == 4:
+        DescadastrarUsuario()
+    elif entrada == 5:
+        Voltar()
+
+def OpcaoMenuVotacao(entrada):
+    if entrada == 1:
+        CadastrarCandidatos()
+    elif entrada == 2:
+        NovaVotacao()
+    elif entrada == 3:
+        AdicionarVoto()
+    elif entrada == 4:
+        GerarVotosAleatorios()
+    elif entrada == 5:
+        ResultadoParcial()
+    elif entrada == 0:
+        Sair()
+
+
+#titulo_arb é o obj que vai ser criado da arvore rb no crud
+
+def CadastrarTituloARB(numero): #ARB
+    if titulo_arb.procurar(numero) is None:
+        titulo_arb.inserirVP(numero)
+        return "Titulo Cadastrado"
+    else:
+        return "Erro! Titulo já cadastrado no sistema"
+
+def CadastrarTitulo():
+    print("Por favor, digite o número do Titulo de Eleitor: ")
+    numero_titulo =int(input())
+    CadastrarTituloARB(numero_titulo)
+
+#candidatos_ab é o obj que vai ser criado da arvore b
+
+def CadastrarCandidatosAB(nome,numero): #rever essa parte
+    if candidatos_ab.procurar(numero) is None:
+        candidatos_ab.inserir(nome,numero) #ver isso na arvore b
+        return "Candidato Cadastrado"
+
+#def CadastrarCandidatos():
+
+
+#def ProcurarTitulo(numeracao):
+
+
+
+def Voltar():
+    IniciarMenu()
+
+
+IniciarMenu()
+
