@@ -6,6 +6,20 @@ class noh:
         self._direito = None
         self._pai = None
         self._vermelho = True
+        self._nome = None
+        self._ligacao = None
+
+    def getligacao(self):
+        return self._ligacao
+
+    def setligacao(self, ligacao):
+        self._ligacao = ligacao
+
+    def getnome(self):
+        return self._nome
+
+    def setnome(self, nome):
+        self._nome = nome
 
     def setvermelho(self, cor=True):
         self._vermelho = cor
@@ -333,7 +347,7 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
         else:
             x = y.getdireito()
         if x is not self.getnil():
-            x.setpai(y.getpai())                           #Linha que existe no pseudo-código, mas quando descomentada dá erro e comentada funciona
+            x.setpai(y.getpai())
         if y.getpai() is self.getnil():
             self.setraiz(x)
         else:
@@ -393,6 +407,7 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
                         no_fixup = self.getraiz()
         no_fixup.setvervmelho(False)
 
+'''
 from random import randint
 arvore_de_eleitores = ArvoreVermelhaePreta()
 arvore_de_votacao = ArvoredeBuscaBinaria()
@@ -412,7 +427,7 @@ arvoreVP.preorder(arvoreVP.getraiz())
     #arvore_de_eleitores.inserirVP(randint(1000,9999))
 #arvore_de_eleitores.preorder(arvore_de_eleitores.getraiz())
 
-
+'''
 
 
 
@@ -534,4 +549,4 @@ def Voltar():
     IniciarMenu()
 
 
-#IniciarMenu()
+IniciarMenu()
