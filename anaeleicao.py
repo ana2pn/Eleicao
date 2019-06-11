@@ -112,12 +112,26 @@ class ArvoredeBuscaBinaria:
                     i = i.getdireito()
         return novonoh
 
+    def procurar(self, valor):
+        if self._raiz is None:
+            return None
+        i = self._raiz
+        while i != self._nil:
+            if valor < i.getvalor():
+                i = i.getesquerdo()
+            elif valor > i.getvalor():
+                i = i.getdireito()
+            elif valor == i.getvalor():
+                return i
+            elif i is None:
+                return None
 
+    '''
     def procurar(self, valor):
         if self.getraiz() == None:
             return None
         i = self.getraiz()
-        while i.getvalor() != valor:
+        while i.getvalor() != self._nil:
             if valor <= i.getvalor():
                 i = i.getesquerdo()
             else:
@@ -125,7 +139,7 @@ class ArvoredeBuscaBinaria:
             if i == None:
                 return None
         return i
-
+    '''
     def preorder(self, no):                     #Exibe os valores dos nós em preordem
         if no is not self.getnil():
             print(no.getvalor(), end= " ")
@@ -311,14 +325,15 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
 
     def remover_rb(self, z):
         if z.getesquerdo() is self.getnil() or z.getdireito() is self.getnil():
-            y = z
+            y = z                                                                               #Z não possui filhos
         else:
-            y = self.predecessor(z)
+            y = self.predecessor(z)                                                                #Z possui dois filhos
         if y.getesquerdo() is not self.getnil():
             x = y.getesquerdo()
         else:
             x = y.getdireito()
-        #x.setpai(y.getpai())                           #Linha que existe no pseudo-código, mas quando descomentada dá erro e comentada funciona
+        if x is not self.getnil():
+            x.setpai(y.getpai())                           #Linha que existe no pseudo-código, mas quando descomentada dá erro e comentada funciona
         if y.getpai() is self.getnil():
             self.setraiz(x)
         else:
@@ -382,16 +397,31 @@ from random import randint
 arvore_de_eleitores = ArvoreVermelhaePreta()
 arvore_de_votacao = ArvoredeBuscaBinaria()
 
-for i in range(20):
-    arvore_de_eleitores.inserirVP(randint(1000,9999))
-arvore_de_eleitores.preorder(arvore_de_eleitores.getraiz())
+
+arvoreVP = ArvoreVermelhaePreta()
+elementos = [35,21,32,12,23,54,11,31,40]
+for i in elementos:
+    arvoreVP.inserirVP(i)
+arvoreVP.preorder(arvoreVP.getraiz())
+arvoreVP.remover_rb(arvoreVP.procurar(12))
+print()
+arvoreVP.preorder(arvoreVP.getraiz())
+
+
+#for i in range(20):
+    #arvore_de_eleitores.inserirVP(randint(1000,9999))
+#arvore_de_eleitores.preorder(arvore_de_eleitores.getraiz())
+
+
+
+
 
 def IniciarMenu():
     print("☆"*25)
     print("\t\tSistema de Eleição")
     print("☆"* 25)
     print()
-    print("1- Cadastrar Titulos")
+    print("1- Titulos")
     print("2- Votação")
     print("Digite o número da sua opção: ", end="")
     op_menu= int(input())
@@ -409,14 +439,15 @@ def IniciarMenu():
 def OpcaoMenuTitulo(entrada):
 
     if entrada == 1:
-        CadastrarTitulo()
+        #LimparTela()
+        CadastrarTitulo()               #ok
     elif entrada == 2:
-        DescadastrarTitulo()
+        DescadastrarTitulo()        #ok
     elif entrada == 3:
-        CarregarTitulos()
+        CarregarTitulos()           #ok
     elif entrada == 4:
         DescadastrarUsuario()
-    elif entrada == 5:
+    elif entrada == 5:               #ok
         Voltar()
 
 def OpcaoMenuVotacao(entrada):
@@ -430,23 +461,58 @@ def OpcaoMenuVotacao(entrada):
         GerarVotosAleatorios()
     elif entrada == 5:
         ResultadoParcial()
+    elif entrada == 6:
+        Voltar()
     elif entrada == 0:
         Sair()
 
+#limpar tela e lopp no cadastrar
+import os
+def LimparTela():
+    os.system('cls')
 
-#titulo_arb é o obj que vai ser criado da arvore rb no crud
-
-def CadastrarTituloARB(numero): #ARB
-    if titulo_arb.procurar(numero) is None:
-        titulo_arb.inserirVP(numero)
-        return "Titulo Cadastrado"
-    else:
-        return "Erro! Titulo já cadastrado no sistema"
+def visualizarpre():
+    arvore_de_eleitores.preorder(arvore_de_eleitores.getraiz())
 
 def CadastrarTitulo():
-    print("Por favor, digite o número do Titulo de Eleitor: ")
+    print("Por favor, digite o número do Titulo de Eleitor: ", end="")
     numero_titulo =int(input())
-    CadastrarTituloARB(numero_titulo)
+    if arvore_de_eleitores.procurar(numero_titulo) is None:
+        arvore_de_eleitores.inserirVP(numero_titulo)
+        visualizarpre()
+        print("\nTitulo Cadastrado")
+        return Voltar()
+    else:
+        print("\nErro! Titulo já cadastrado no sistema")
+        return Voltar()
+
+def DescadastrarTitulo():
+    print("Por favor, digite o número do Título de Eleitor que deseja excluir: ", end="")
+    numero_titulo = int(input())
+    if arvore_de_eleitores.procurar(numero_titulo):
+        arvore_de_eleitores.remover_rb(arvore_de_eleitores.procurar(numero_titulo))
+        visualizarpre()
+        print()
+        Voltar()
+    else:
+        print("\nErro! Título incorreto! 1- Tentar Novamente\t2- Voltar")
+        n = int(input())
+        if n == 1:
+            DescadastrarTitulo()
+        elif n == 2:
+            Voltar()
+
+def CarregarTitulos():
+    for i in range(20):
+        arvore_de_eleitores.inserirVP(randint(1000, 9999))
+    arvore_de_eleitores.preorder(arvore_de_eleitores.getraiz())
+
+
+
+
+
+
+
 
 #candidatos_ab é o obj que vai ser criado da arvore b
 
@@ -454,6 +520,8 @@ def CadastrarCandidatosAB(nome,numero): #rever essa parte
     if candidatos_ab.procurar(numero) is None:
         candidatos_ab.inserir(nome,numero) #ver isso na arvore b
         return "Candidato Cadastrado"
+
+
 
 #def CadastrarCandidatos():
 
@@ -466,5 +534,4 @@ def Voltar():
     IniciarMenu()
 
 
-IniciarMenu()
-
+#IniciarMenu()
