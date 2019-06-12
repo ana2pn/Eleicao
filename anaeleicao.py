@@ -86,56 +86,56 @@ class ArvoredeBuscaBinaria:
         else:
             return print("%d"+str(noh.getvalor()))
 
-    def ehVazio(self):
+    def ehVazio(self):                                          #função que verifica se a árvore está vazia
         return self._raiz is None
 
-    def ehfilhodireito(self, no):
+    def ehfilhodireito(self, no):                               #funcao que verifica se um um no eh filho direito
         if no is not None:
             if no is not self.getraiz():
                 if no == no.getpai().getdireito():
                     return True
         return None
 
-    def ehfilhoesquerdo(self, no):
+    def ehfilhoesquerdo(self, no):                              #funcao que verifica se um no eh filho esquerdo
         if no is not None:
             if no is not self.getraiz():
                 if no == no.getpai().getesquerdo():
                     return True
         return None
 
-    def inserir(self, valor):
-        novonoh = noh(valor)
+    def inserir(self, valor):                                   #funcao que insere um no na arvore
+        novonoh = noh(valor)                                    #primeiramente verifica se a árvore esta vazia, se estiver o no passa a ser a raiz da arvore
         if self.ehVazio():
             self.setraiz(novonoh)
             return novonoh
         i = self._raiz
-        while True:
-            if valor <= i.getvalor():
-                if i.getesquerdo() is None:
-                    i.setesquerdo(novonoh)
-                    novonoh.setpai(i)
+        while True:                                             #Laço que fará as verificações abaixo enquanto o no não for inserido
+            if valor < i.getvalor():                            #Verifica se o no inserido éh menor que a raiz
+                if i.getesquerdo() is None:                     #Verifica se o filho esquerdo da raiz eh none
+                    i.setesquerdo(novonoh)                      #Se for none, o no eh inserido no local onde o none foi encontrado
+                    novonoh.setpai(i)                           #O ponteiro do novo no passa a apontar para o seu pai
                     break
                 else:
-                    i = i.getesquerdo()
-            else:
-                if i.getdireito() is None:
-                    i.setdireito(novonoh)
-                    novonoh.setpai(i)
+                    i = i.getesquerdo()                         #Caso o lado esquerdo da raiz não seja none, o no referencia passa a ser o no esquerdo da raiz
+            else:                                               #Caso em que o no inserido eh maior que a raiz
+                if i.getdireito() is None:                      #Verifica se o no do lado direito da raiz eh none
+                    i.setdireito(novonoh)                       #Se for ponteiro da raiz passa a apontar para o novono
+                    novonoh.setpai(i)                           #E o novo no passa a apontar para a raiz
                     break
                 else:
-                    i = i.getdireito()
+                    i = i.getdireito()                          #Caso o no do lado direito da raiz nao seja none, o no referencia passa a ser o no direito
         return novonoh
 
-    def procurar(self, valor):
-        if self._raiz is None:
+    def procurar(self, valor):                                  #Função que irá receber um valor e retornar o no se ele existir na árvore
+        if self._raiz is None:                                  #Se a raiz for vazia, significa que a arvore está vazia e a funcao retorna None
             return None
-        i = self._raiz
+        i = self._raiz                                          #A raiz da árvore passa a ser a referencia inicial
         while i != self._nil:
-            if valor < i.getvalor():
-                i = i.getesquerdo()
-            elif valor > i.getvalor():
+            if valor < i.getvalor():                            #Se o valor procurado é menor que o valor da raiz(inicialmente)
+                i = i.getesquerdo()                             #A função ira procurar o valor do lado esquerdo da árvore
+            elif valor > i.getvalor():                          #Caso contrário, a função irá procurar o valor do lado direito da arvore
                 i = i.getdireito()
-            elif valor == i.getvalor():
+            elif valor == i.getvalor():                         #Caso encontre irá retornar o no cujo valor é igual ao valor procurado
                 return i
             elif i is None:
                 return None
@@ -216,32 +216,32 @@ class ArvoredeBuscaBinaria:
                     self.predecessor(no.getpai())
 
 
-    def remover(self, v):
-        if v.getesquerdo() == None or v.getdireito() == None:
-            y = v
+    def remover(self, v):                                                       #função que remove um nó da arvore, v é o no que será removido
+        if v.getesquerdo() == None or v.getdireito() == None:                   #Verifica se v possui no máximo um filho
+            y = v                                                               #Caso v possua no máximo 1 filho y passa a ser igual a v
         else:
-            y = self.sucessor(v)
-        if y.getesquerdo() is not None:
-            x = y.getesquerdo()
+            y = self.sucessor(v)                                                #Caso v possua dois filhos, fazemos y ser igual ao sucessor de v
+        if y.getesquerdo() is not None:                                         #Verifica se o sucessor de v (y), possui filho esquerdo
+            x = y.getesquerdo()                                                 #Se possuir, x passa a ser o filho esquerdo de y
         else:
-            x = y.getdireito()
-        if x != None:
-            x.setpai(y.getpai())
-        if y.getpai() == None:
+            x = y.getdireito()                                                  #Se não possuir filho esquerdo, x passa a ser filho direito de y
+        if x != None:                                                           #Verifica se x é diferente de vazio
+            x.setpai(y.getpai())                                                #Se for, o pai de x passa a ser o pai de y
+        if y.getpai() == None:                                                  #Se y não tiver pai, significa que y é a raiz então a raiz passará a ser x
             self.setraiz(x)
-        else:
-            if y == y.getpai().getesquerdo():
-                y.getpai().setesquerdo(x)
+        else:                                                                   #Caso y não seja a raiz
+            if y == y.getpai().getesquerdo():                                   #Caso y seja filho esquerdo de algum no
+                y.getpai().setesquerdo(x)                                       #Então x passará a ter toda a subarvore esquerda que era de y
             else:
                 y.getpai().setdireito(x)
         if y != v:
-            v.setvalor(y.getvalor())
+            v.setvalor(y.getvalor())                                            #Caso a condicao seja atendida, o valor do no de v passa a ter o valor do no de y
         return y
 
 class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
     def inserirVP(self, valor):
         no=noh(valor)                               #Cria o objeto do novo no
-        pai=self.getraiz()
+        pai=self.getraiz()                          #Inicialmente a raiz passa ser a referência principal da arvore
         if pai is None:                             #Verifica se a árvore esta vazia
             self.setraiz(no)                        #o novo no passa a ser a raiz
             no.setvermelho(False)                   #Faz a raiz ser preta
@@ -251,7 +251,7 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
         else:                                       #Caso a árvore não esteja vazia
             while True:
                 if valor <= pai.getvalor():         #Verifica se o valor do no inserido é menor que o valor da raiz
-                    new_pai = pai.getesquerdo()
+                    new_pai = pai.getesquerdo()     #Caso seja, a referencia da arvore passa a ser o new_pai como lado esquerdo da raiz
                     if new_pai is self.getnil():
                         break                        #O laço while é interrompido quando é encontrada uma posicao vazia para o novono
                     else:
@@ -288,21 +288,21 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
         y.setesquerdo(no)
         no.setpai(y)
 
-    def rotacaodireita(self, y):
-        x = y.getesquerdo()
-        y.setesquerdo(x.getdireito())
-        if x.getdireito() is not self.getnil():
-            x.getdireito().setpai(y)
-        x.setpai(y.getpai())
-        if y.getpai() is self.getnil():
+    def rotacaodireita(self, y):                                    #Recebe um no que será rotacionado
+        x = y.getesquerdo()                                         #Define x como sendo filho esquerdo do no recebido pela funcao
+        y.setesquerdo(x.getdireito())                               #O filho esquerdo de y passa a ser o filho direito de x
+        if x.getdireito() is not self.getnil():                     #Verifica se o no direito de x não eh nil
+            x.getdireito().setpai(y)                                #Se nao for nil o pai do no direito de x passa a ser y
+        x.setpai(y.getpai())                                        #O pai direito de x passa a ser y
+        if y.getpai() is self.getnil():                             #Se o pai de y for nil, x passa a ser a raiz da arvore
             self.setraiz(x)
-        else:
+        else:                                                       #Caso o pai de y não seja nil,a funcao ira verificar se y eh filho esquerdo ou direito de algum no
             if self.ehfilhodireito(y):
-                y.getpai().setdireito(x)
+                y.getpai().setdireito(x)                            #Se for filho direito, o filho direito do pai de y passa a ser x
             else:
                 y.getpai().setesquerdo(x)
-        x.setdireito(y)
-        y.setpai(x)
+        x.setdireito(y)                                             #o filho direito de x passa a ser y
+        y.setpai(x)                                                 #e o pai de y passa a ser x
 
     def ajustar_insercao(self, No):
         while No.getpai().getvermelho():
@@ -337,28 +337,28 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
         self.getraiz().setvermelho(False)                           #Depois de todos os ajustes, faz a raiz ser preta, independentemente de qualquer caso
 
 
-    def remover_rb(self, z):
-        if z.getesquerdo() is self.getnil() or z.getdireito() is self.getnil():
-            y = z                                                                               #Z não possui filhos
+    def remover_rb(self, z):                                                    #função que remove um no da arvore vermelha e preta, z eh o no que sera removido
+        if z.getesquerdo() is self.getnil() or z.getdireito() is self.getnil(): #Verifica se z possui no maximo 1 filho
+            y = z                                                               #Caso z tenha no maximo 1 filho, y passa a ser igual a z
+        else:                                                                   #Caso z possua dois filhos procura-se o predecessor de z e atribui-se o predecessor de z a y
+            y = self.predecessor(z)
+        if y.getesquerdo() is not self.getnil():                                #Verifica se o predecessor existe(não éh vazio)
+            x = y.getesquerdo()                                                 #Se existir, x passa a ser o filho esquerdo de y
         else:
-            y = self.predecessor(z)                                                                #Z possui dois filhos
-        if y.getesquerdo() is not self.getnil():
-            x = y.getesquerdo()
-        else:
-            x = y.getdireito()
-        if x is not self.getnil():
-            x.setpai(y.getpai())
-        if y.getpai() is self.getnil():
+            x = y.getdireito()                                                  #Caso contrario x passa a ser o filho direito de y
+        if x is not self.getnil():                                              #Verifica se x definido acima nao eh vazio
+            x.setpai(y.getpai())                                                #Se x não for vazio, o pai de x passa a ser o pai do predecessor de z (pai de y)
+        if y.getpai() is self.getnil():                                         #Caso o pai do predecessor seja vazio, x passa a ser a raiz da arvore
             self.setraiz(x)
-        else:
-            if y == y.getpai().getesquerdo():
+        else:                                                                   #Caso contrario, verifica se y é filho esquerdo de algum no
+            if y == y.getpai().getesquerdo():                                   #Se for o irmao de y passa a ser x
                 y.getpai().setesquerdo(x)
             else:
                 y.getpai().setdireito(x)
         if y != z:
             z.setvalor(y.getvalor())
-        if y.getvermelho is False:
-            self.remover_rb_ajuste(x)
+        if y.getvermelho is False:                                              #Função chamada quando o noh foi removido foi preto para ajustar a arvore vermelha e preta para que
+            self.remover_rb_ajuste(x)                                           #todas as propriedades da arvore vermelha e preta sejam mantidas
         return y
 
     def remover_rb_ajuste(self, no_fixup):
@@ -407,12 +407,12 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
                         no_fixup = self.getraiz()
         no_fixup.setvervmelho(False)
 
-'''
+
 from random import randint
-arvore_de_eleitores = ArvoreVermelhaePreta()
+arvore_de_eleitores = ArvoreVermelhaePreta()                        #Objetos instanciados para representar a arvore de eleitores e a arvore de votacao
 arvore_de_votacao = ArvoredeBuscaBinaria()
 
-
+'''
 arvoreVP = ArvoreVermelhaePreta()
 elementos = [35,21,32,12,23,54,11,31,40]
 for i in elementos:
@@ -422,16 +422,16 @@ arvoreVP.remover_rb(arvoreVP.procurar(12))
 print()
 arvoreVP.preorder(arvoreVP.getraiz())
 
-
+'''
 #for i in range(20):
     #arvore_de_eleitores.inserirVP(randint(1000,9999))
 #arvore_de_eleitores.preorder(arvore_de_eleitores.getraiz())
 
-'''
 
 
 
-def IniciarMenu():
+
+def IniciarMenu():                                  #Menu principal do programa
     print("☆"*25)
     print("\t\tSistema de Eleição")
     print("☆"* 25)
@@ -451,7 +451,7 @@ def IniciarMenu():
         print("\t5- Resultado Parcial da Eleição\n\t6- Voltar\n\t0-Sair\n\t\t Digite o número da sua opção: ", end="")
         OpcaoMenuVotacao(int(input()))
 
-def OpcaoMenuTitulo(entrada):
+def OpcaoMenuTitulo(entrada):                               #Função que será chamada para exibir o menu dos títulos
 
     if entrada == 1:
         #LimparTela()
@@ -465,7 +465,7 @@ def OpcaoMenuTitulo(entrada):
     elif entrada == 5:               #ok
         Voltar()
 
-def OpcaoMenuVotacao(entrada):
+def OpcaoMenuVotacao(entrada):                              #Função que será chamada para exibir o meu de votação
     if entrada == 1:
         CadastrarCandidatos()
     elif entrada == 2:
@@ -481,7 +481,6 @@ def OpcaoMenuVotacao(entrada):
     elif entrada == 0:
         Sair()
 
-#limpar tela e lopp no cadastrar
 import os
 def LimparTela():
     os.system('cls')
@@ -492,25 +491,25 @@ def visualizarpre():
 def CadastrarTitulo():
     print("Por favor, digite o número do Titulo de Eleitor: ", end="")
     numero_titulo =int(input())
-    if arvore_de_eleitores.procurar(numero_titulo) is None:
-        arvore_de_eleitores.inserirVP(numero_titulo)
+    if arvore_de_eleitores.procurar(numero_titulo) is None:             #Procura o titulo inserido na arvore de eleitores, caso o titulo nao seja encontrado
+        arvore_de_eleitores.inserirVP(numero_titulo)                    #o titulo é inserido na arvore de eleitores
         visualizarpre()
         print("\nTitulo Cadastrado")
-        return Voltar()
-    else:
+        return Voltar()                                                 #Volta ao menu principal após o titulo ter sido cadastrado automaticamente
+    else:                                                               #Caso o titulo ja tenha sido cadastrado, não insere o titulo  na arvore e exibe a mensagem
         print("\nErro! Titulo já cadastrado no sistema")
         return Voltar()
 
 def DescadastrarTitulo():
     print("Por favor, digite o número do Título de Eleitor que deseja excluir: ", end="")
-    numero_titulo = int(input())
-    if arvore_de_eleitores.procurar(numero_titulo):
-        arvore_de_eleitores.remover_rb(arvore_de_eleitores.procurar(numero_titulo))
+    numero_titulo = int(input())                                                    #Recebe um titulo que sera removido do sistema
+    if arvore_de_eleitores.procurar(numero_titulo):                                 #Procura o titulo digitado na arvore de eleitores
+        arvore_de_eleitores.remover_rb(arvore_de_eleitores.procurar(numero_titulo)) #Se encontrar remove o titulo da arvore de eleitores
         visualizarpre()
         print()
         Voltar()
     else:
-        print("\nErro! Título incorreto! 1- Tentar Novamente\t2- Voltar")
+        print("\nErro! Título incorreto! 1- Tentar Novamente\t2- Voltar")           #Caso nao encontre o título digitado na arvore de eleitores significa que ele não existe
         n = int(input())
         if n == 1:
             DescadastrarTitulo()
@@ -518,8 +517,8 @@ def DescadastrarTitulo():
             Voltar()
 
 def CarregarTitulos():
-    for i in range(20):
-        arvore_de_eleitores.inserirVP(randint(1000, 9999))
+    for i in range(20):                                                             #Carrega automaticamente e aleatoriamente 20 titulos de eleitores
+        arvore_de_eleitores.inserirVP(randint(1000, 9999))                          #preenche a arvore de eleitores
     arvore_de_eleitores.preorder(arvore_de_eleitores.getraiz())
 
 
@@ -550,3 +549,4 @@ def Voltar():
 
 
 IniciarMenu()
+#Faltando comentar rotacao a esquerda e ajustar o remover
