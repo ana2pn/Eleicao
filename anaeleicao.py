@@ -1,12 +1,12 @@
 
 class noh:
-    def __init__(self, valor):
+    def __init__(self, valor, nome = None):
         self._valor = valor
         self._esquerdo = None
         self._direito = None
         self._pai = None
         self._vermelho = True
-        self._nome = None
+        self._nome = nome
         self._ligacao = None
 
     def getligacao(self):
@@ -103,8 +103,8 @@ class ArvoredeBuscaBinaria:
                     return True
         return None
 
-    def inserir(self, valor):                                   #funcao que insere um no na arvore
-        novonoh = noh(valor)                                    #primeiramente verifica se a árvore esta vazia, se estiver o no passa a ser a raiz da arvore
+    def inserir(self, valor, nome = None):                                   #funcao que insere um no na arvore
+        novonoh = noh(valor, nome)                                    #primeiramente verifica se a árvore esta vazia, se estiver o no passa a ser a raiz da arvore
         if self.ehVazio():
             self.setraiz(novonoh)
             return novonoh
@@ -140,35 +140,22 @@ class ArvoredeBuscaBinaria:
             elif i is None:
                 return None
 
-    '''
-    def procurar(self, valor):
-        if self.getraiz() == None:
-            return None
-        i = self.getraiz()
-        while i.getvalor() != self._nil:
-            if valor <= i.getvalor():
-                i = i.getesquerdo()
-            else:
-                i = i.getdireito()
-            if i == None:
-                return None
-        return i
-    '''
+
     def preorder(self, no):                     #Exibe os valores dos nós em preordem
-        if no is not self.getnil():
+        if no is not None:
             print(no.getvalor(), end= " ")
             self.preorder(no.getesquerdo())
             self.preorder(no.getdireito())
 
 
     def posorder(self, no):                     #Exibe os valores dos nós em posordem
-        if no is not self.getnil():
+        if no is not None:
             self.posorder(no.getesquerdo())
             self.posorder(no.getdireito())
             print(no.getvalor(), end=" ")
 
     def inorder(self, no):
-        if no is not self.getnil():
+        if no is not None:
             self.inorder(no.getesquerdo())
             print(no.getvalor(), end=" ")
             self.inorder(no.getdireito())
@@ -270,6 +257,26 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
             no.setdireito(self.getnil())                # Faz o ponteiro esquerdo e direito do no folha apontar para nil
             no.setesquerdo(self.getnil())
             self.ajustar_insercao(no)                   #Chama a funcao ajustar_insercao para verificar e balancear a arvore vermelha e preta
+
+    def preorderVP(self, no):                     #Exibe os valores dos nós em preordem
+        if no is not self.getnil():
+            print(no.getvalor(), end= " ")
+            self.preorderVP(no.getesquerdo())
+            self.preorderVP(no.getdireito())
+
+
+    def posorderVP(self, no):                     #Exibe os valores dos nós em posordem
+        if no is not self.getnil():
+            self.posorderVP(no.getesquerdo())
+            self.posorderVP(no.getdireito())
+            print(no.getvalor(), end=" ")
+
+    def inorderVP(self, no):
+        if no is not self.getnil():
+            self.inorderVP(no.getesquerdo())
+            print(no.getvalor(), end=" ")
+            self.inorderVP(no.getdireito())
+
 
 
     def rotacaoesquerda(self, no):
@@ -443,12 +450,12 @@ def IniciarMenu():                                  #Menu principal do programa
     if op_menu==1:
         print("☆☆☆☆☆☆☆☆☆☆☆☆☆ Titulo ☆☆☆☆☆☆☆☆☆☆☆☆☆\nPor favor, escolha uma opção abaixo:\n ")
         print("\t1- Cadastrar Título \n\t2- Descadastrar Título \n \t3- Carregar Títulos \n \t4- Descadastrar usuário ")
-        print("\t5-Voltar \n\t\t Digite o número da sua opção: ", end="")
+        print("\t5- Voltar \n\t\t Digite o número da sua opção: ", end="")
         OpcaoMenuTitulo(int(input()))
     elif op_menu ==2:
         print("☆☆☆☆☆☆☆☆☆☆☆☆☆ Votação ☆☆☆☆☆☆☆☆☆☆☆☆☆\nPor favor, escolha uma opção abaixo:\n ")
         print("\t1- Cadastrar Candidatos\n\t2- Nova Votação\n\t3- Adicionar Voto\n\t4- Gerar Votos Aleatórios")
-        print("\t5- Resultado Parcial da Eleição\n\t6- Voltar\n\t0-Sair\n\t\t Digite o número da sua opção: ", end="")
+        print("\t5- Resultado Parcial da Eleição\n\t6- Voltar\n\t0- Sair\n\t\t Digite o número da sua opção: ", end="")
         OpcaoMenuVotacao(int(input()))
 
 def OpcaoMenuTitulo(entrada):                               #Função que será chamada para exibir o menu dos títulos
@@ -460,9 +467,7 @@ def OpcaoMenuTitulo(entrada):                               #Função que será 
         DescadastrarTitulo()        #ok
     elif entrada == 3:
         CarregarTitulos()           #ok
-    elif entrada == 4:
-        DescadastrarUsuario()
-    elif entrada == 5:               #ok
+    elif entrada == 4:               #ok
         Voltar()
 
 def OpcaoMenuVotacao(entrada):                              #Função que será chamada para exibir o meu de votação
@@ -486,7 +491,7 @@ def LimparTela():
     os.system('cls')
 
 def visualizarpre():
-    arvore_de_eleitores.preorder(arvore_de_eleitores.getraiz())
+    arvore_de_eleitores.preorderVP(arvore_de_eleitores.getraiz())
 
 def CadastrarTitulo():
     print("Por favor, digite o número do Titulo de Eleitor: ", end="")
@@ -522,25 +527,67 @@ def CarregarTitulos():
     arvore_de_eleitores.preorder(arvore_de_eleitores.getraiz())
 
 
+'''
+from random import randint
+arvore_de_eleitores = ArvoreVermelhaePreta()
+arvore_de_votacao = ArvoredeBuscaBinaria()
+arvoreVP = ArvoreVermelhaePreta()
+elementos = [35,21,32,12,23,54,11,31,40]
+for i in elementos:
+    arvoreVP.inserirVP(i)
+arvoreVP.preorder(arvoreVP.getraiz())
+arvoreVP.remover_rb(arvoreVP.procurar(12))
+print()
+arvoreVP.preorder(arvoreVP.getraiz())
+#for i in range(20):
+    #arvore_de_eleitores.inserirVP(randint(1000,9999))
+#arvore_de_eleitores.preorder(arvore_de_eleitores.getraiz())
+'''
+todos_candidatos = []
+cont_votos = 0
+def CadastrarCandidatos():                                              #Recebe o nome e o numero do candidato
+    print("Por favor, digite o nome e titulo do candidato: ", end="")
+    entrada_candidato = input().split()
+    if entrada_candidato not in todos_candidatos:
+        todos_candidatos.append(entrada_candidato)
+        print("Candidato cadastrado com sucesso!")
+        return Voltar()
+    else:
+        print("Esse candidato já foi cadastrado!")
 
 
+def VerificarTiutloRB(titulo):
+    if arvore_de_eleitores.procurar(titulo) is not None:
+        print("O titulo existe no sistema")
+        return True
+    else:
+        print("O titulo não existe no sistema")
+        return False
 
+def NovaVotacao(): #ver isso aq
+    if arvore_de_votacao.ehVazio() is False:
+        print(arvore_de_votacao.ehVazio())
 
+def AdicionarVotos():
+    if VerificarTituloRB is True:
+        c = int(input("Digite o numero do seu candidato: "))
+        for i in range(len(todos_candidatos)):
+            if todos_candidatos[i][2] == c:
+                    cont_votos +=1
+            else:
+                print("Esse candidato não está cadastrado!")
+    else:
+        print("Esse título não existe!")
 
+def VotosAleatorios(): #testar o verificar titulo
+    for i in range(20):
+        arvore_de_votacao.inserir(randint(1000, 9999))
+    arvore_de_votacao.preorder(arvore_de_votacao.getraiz())
 
-#candidatos_ab é o obj que vai ser criado da arvore b
+#def ResultadoParcial():
 
-def CadastrarCandidatosAB(nome,numero): #rever essa parte
-    if candidatos_ab.procurar(numero) is None:
-        candidatos_ab.inserir(nome,numero) #ver isso na arvore b
-        return "Candidato Cadastrado"
+#def Sair(): # apagar tudo + break
 
-
-
-#def CadastrarCandidatos():
-
-
-#def ProcurarTitulo(numeracao):
 
 
 
@@ -549,4 +596,10 @@ def Voltar():
 
 
 IniciarMenu()
-#Faltando comentar rotacao a esquerda e ajustar o remover
+'''
+arvoreVP = ArvoredeBuscaBinaria()
+elementos = [35,21,32,12,23,54,11,31,40]
+for i in elementos:
+    arvoreVP.inserir(i)
+arvoreVP.preorder(arvoreVP.getraiz())
+'''
