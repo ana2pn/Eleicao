@@ -556,7 +556,7 @@ def CadastrarCandidatos():                                              #Recebe 
         print("Esse candidato já foi cadastrado!")
 
 
-def VerificarTiutloRB(titulo):
+def VerificarTituloRB(titulo):
     if arvore_de_eleitores.procurar(titulo) is not None:
         print("O titulo existe no sistema")
         return True
@@ -567,19 +567,24 @@ def VerificarTiutloRB(titulo):
 def NovaVotacao(): #ver isso aq
     if arvore_de_votacao.ehVazio() is False:
         print(arvore_de_votacao.ehVazio())
+        print(arvore_de_votacao.preorder(arvore_de_votacao.getraiz()))
+        return Voltar()
 
-def AdicionarVotos():
-    if VerificarTituloRB is True:
+def AdicionarVoto():
+    print("Digite seu título de eleitor:")
+    titulovotante = int(input())
+    if VerificarTituloRB(titulovotante) is True:
         c = int(input("Digite o numero do seu candidato: "))
         for i in range(len(todos_candidatos)):
-            if todos_candidatos[i][2] == c:
-                    cont_votos +=1
+            if todos_candidatos[i][1] == c:
+
+                    cont_votos.append((todos_candidatos[i][1],)
             else:
                 print("Esse candidato não está cadastrado!")
     else:
         print("Esse título não existe!")
 
-def VotosAleatorios(): #testar o verificar titulo
+def VotosAleatorios():
     for i in range(20):
         arvore_de_votacao.inserir(randint(1000, 9999))
     arvore_de_votacao.preorder(arvore_de_votacao.getraiz())
