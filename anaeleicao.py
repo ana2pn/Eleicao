@@ -126,11 +126,11 @@ class ArvoredeBuscaBinaria:
                     i = i.getdireito()                          #Caso o no do lado direito da raiz nao seja none, o no referencia passa a ser o no direito
         return novonoh
 
-    def procurar(self, valor):                                  #Função que irá receber um valor e retornar o no se ele existir na árvore
+    def procurarAB(self, valor):                                  #Função que irá receber um valor e retornar o no se ele existir na árvore
         if self._raiz is None:                                  #Se a raiz for vazia, significa que a arvore está vazia e a funcao retorna None
             return None
         i = self._raiz                                          #A raiz da árvore passa a ser a referencia inicial
-        while i != self._nil:
+        while i != None:
             if valor < i.getvalor():                            #Se o valor procurado é menor que o valor da raiz(inicialmente)
                 i = i.getesquerdo()                             #A função ira procurar o valor do lado esquerdo da árvore
             elif valor > i.getvalor():                          #Caso contrário, a função irá procurar o valor do lado direito da arvore
@@ -257,6 +257,21 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
             no.setdireito(self.getnil())                # Faz o ponteiro esquerdo e direito do no folha apontar para nil
             no.setesquerdo(self.getnil())
             self.ajustar_insercao(no)                   #Chama a funcao ajustar_insercao para verificar e balancear a arvore vermelha e preta
+
+    def procurarVP(self, valor):                                  #Função que irá receber um valor e retornar o no se ele existir na árvore
+        if self._raiz is None:                                  #Se a raiz for vazia, significa que a arvore está vazia e a funcao retorna None
+            return None
+        i = self._raiz                                          #A raiz da árvore passa a ser a referencia inicial
+        while i != self._nil:
+            if valor < i.getvalor():                            #Se o valor procurado é menor que o valor da raiz(inicialmente)
+                i = i.getesquerdo()                             #A função ira procurar o valor do lado esquerdo da árvore
+            elif valor > i.getvalor():                          #Caso contrário, a função irá procurar o valor do lado direito da arvore
+                i = i.getdireito()
+            elif valor == i.getvalor():                         #Caso encontre irá retornar o no cujo valor é igual ao valor procurado
+                return i
+            elif i is None:
+                return None
+
 
     def preorderVP(self, no):                     #Exibe os valores dos nós em preordem
         if no is not self.getnil():
@@ -487,7 +502,7 @@ def visualizarpre():
 def CadastrarTitulo():
     print("Por favor, digite o número do Titulo de Eleitor: ", end="")
     numero_titulo =int(input())
-    if arvore_de_eleitores.procurar(numero_titulo) is None:             #Procura o titulo inserido na arvore de eleitores, caso o titulo nao seja encontrado
+    if arvore_de_eleitores.procurarVP(numero_titulo) is None:             #Procura o titulo inserido na arvore de eleitores, caso o titulo nao seja encontrado
         arvore_de_eleitores.inserirVP(numero_titulo)                    #o titulo é inserido na arvore de eleitores
         visualizarpre()
         print("\nTitulo Cadastrado")
@@ -499,8 +514,8 @@ def CadastrarTitulo():
 def DescadastrarTitulo():
     print("Por favor, digite o número do Título de Eleitor que deseja excluir: ", end="")
     numero_titulo = int(input())                                                    #Recebe um titulo que sera removido do sistema
-    if arvore_de_eleitores.procurar(numero_titulo):                                 #Procura o titulo digitado na arvore de eleitores
-        arvore_de_eleitores.remover_rb(arvore_de_eleitores.procurar(numero_titulo)) #Se encontrar remove o titulo da arvore de eleitores
+    if arvore_de_eleitores.procurarVP(numero_titulo):                                 #Procura o titulo digitado na arvore de eleitores
+        arvore_de_eleitores.remover_rb(arvore_de_eleitores.procurarVP(numero_titulo)) #Se encontrar remove o titulo da arvore de eleitores
         visualizarpre()
         print()
         print("Título de eleitor descadastrado com sucesso!")
@@ -534,7 +549,7 @@ def CadastrarCandidatos():                                              #Recebe 
     #pos 0 nome pos 1 número do cand
 
 def VerificarTituloRB(titulo):
-    if arvore_de_eleitores.procurar(titulo) is not None:
+    if arvore_de_eleitores.procurarVP(titulo) is not None:
         print("O titulo existe no sistema")
         return True
     else:
@@ -542,7 +557,7 @@ def VerificarTituloRB(titulo):
         return False
 
 def VerificarTituloAB(titulo):
-    if arvore_de_votacao.procurar(titulo) is not None:
+    if arvore_de_votacao.procurarAB(titulo) is not None:
         print("Esse titulo já realizou o voto")
         return True
     else:
