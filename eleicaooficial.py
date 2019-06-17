@@ -7,13 +7,6 @@ class noh:
         self._pai = None
         self._vermelho = True
         self._nome = nome
-        self._ligacao = None
-
-    def getligacao(self):
-        return self._ligacao
-
-    def setligacao(self, ligacao):
-        self._ligacao = ligacao
 
     def getnome(self):
         return self._nome
@@ -105,8 +98,8 @@ class ArvoredeBuscaBinaria:
 
 
     def inserir(self, valor, nome = None): #funcao que insere um no na arvore
-        global cont
-        novonoh = noh(valor, nome)                                    #primeiramente verifica se a árvore esta vazia, se estiver o no passa a ser a raiz da arvore
+        global cont                                             #Variavel usada para contar a quantidade de nós da arvore
+        novonoh = noh(valor, nome)                              #primeiramente verifica se a árvore esta vazia, se estiver o no passa a ser a raiz da arvore
         if self.ehVazio():
             self.setraiz(novonoh)
             return novonoh
@@ -439,7 +432,6 @@ arvore_de_eleitores = ArvoreVermelhaePreta()                        #Objetos ins
 arvore_de_votacao = ArvoredeBuscaBinaria()
 
 
-
 def IniciarMenu():                                  #Menu principal do programa
     print("☆"*25)
     print("\t\tSistema de Eleição")
@@ -462,12 +454,12 @@ def IniciarMenu():                                  #Menu principal do programa
 
 def OpcaoMenuTitulo(entrada):                               #Função que será chamada para exibir o menu dos títulos
     if entrada == 1:
-        CadastrarTitulo()               #ok
+        CadastrarTitulo()
     elif entrada == 2:
-        DescadastrarTitulo()        #ok
+        DescadastrarTitulo()
     elif entrada == 3:
-        CarregarTitulos()           #ok
-    elif entrada == 4:               #ok
+        CarregarTitulos()
+    elif entrada == 4:
         Voltar()
 
 def OpcaoMenuVotacao(entrada):                              #Função que será chamada para exibir o menu de votação
@@ -622,15 +614,12 @@ def GerarVotosAleatorios():
             num_do_candidato_aleatorio.append(x)
         else:
             num_do_candidato_aleatorio.append(x+1)
-    #print(num_do_candidato_aleatorio)
-    #cont do inserir == quantos nós tem na arvore
     for a in range(15):
         y = random.choice(num_do_candidato_aleatorio)
         todos_votos_aleatorios.append(y)
 
         olhou = True
     Voltar()
-    #print(todos_votos_aleatorios)
 
 def Sair():
     arvore_de_eleitores=None
