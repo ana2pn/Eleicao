@@ -1,4 +1,4 @@
-										Projeto: Eleições – Contagem e Checagem de Votos
+				Projeto: Eleições – Contagem e Checagem de Votos
 1.Definição
 	Nas nossas eleições é sabido que são utilizadas urnas eletrônicas. É desejado a construção de um
 sistema que consiga contar os votos e checar quais os títulos que realizaram o processo de votação e
