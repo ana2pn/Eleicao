@@ -98,7 +98,7 @@ class ArvoredeBuscaBinaria:
 
 
     def inserir(self, valor, nome = None): #funcao que insere um no na arvore
-        global cont                                             #Variavel usada para contar a quantidade de nós da arvore
+        #global cont                                             #Variavel usada para contar a quantidade de nós da arvore
         novonoh = noh(valor, nome)                              #primeiramente verifica se a árvore esta vazia, se estiver o no passa a ser a raiz da arvore
         if self.ehVazio():
             self.setraiz(novonoh)
@@ -119,7 +119,7 @@ class ArvoredeBuscaBinaria:
                     break
                 else:
                     i = i.getdireito()     #Caso o no do lado direito da raiz nao seja none, o no referencia passa a ser o no direito
-        cont+=1
+        #cont+=1
         return novonoh
 
     def procurarAB(self, valor):                                  #Função que irá receber um valor e retornar o no se ele existir na árvore
@@ -428,9 +428,10 @@ class ArvoreVermelhaePreta(ArvoredeBuscaBinaria):
 
 import random
 from random import randint
-arvore_de_eleitores = ArvoreVermelhaePreta()                        #Objetos instanciados para representar a arvore de eleitores e a arvore de votacao
-arvore_de_votacao = ArvoredeBuscaBinaria()
-
+arvore_de_eleitores = ArvoreVermelhaePreta()              #Objeto instanciado para representar a arvore de eleitores
+arvore_de_votacao = ArvoredeBuscaBinaria()                #Objeto instanciado para representar a arvore de votacao
+olhou = False
+candidato_sem_repeticao,candidato_qntVotos,voto,todos_candidatos =[],[],[],[]
 
 def IniciarMenu():                                  #Menu principal do programa
     print("☆"*25)
@@ -479,7 +480,7 @@ def OpcaoMenuVotacao(entrada):                              #Função que será 
         Sair()
 
 def visualizarpre():
-    arvore_de_eleitores.preorderVP(arvore_de_eleitores.getraiz())
+    arvore_de_eleitores.preorderVP(arvore_de_eleitores.getraiz())  #visualiza a arvore RB na Pré Ordem
 
 def CadastrarTitulo():
     print("Por favor, digite o número do Titulo de Eleitor: ", end="")
@@ -517,23 +518,30 @@ def CarregarTitulos():
             arvore_de_eleitores.inserirVP(x)    #preenche a arvore de eleitores
     arvore_de_eleitores.preorderVP(arvore_de_eleitores.getraiz())
     print()
-    #return Voltar()
+    return Voltar()
 
-todos_candidatos = []
-cont_votos = 0
-def CadastrarCandidatos():                                              #Recebe o nome e o numero do candidato
-    print("Por favor, digite o nome e número do candidato: ", end="")
+def CarregarTitulosAleatorios():
+    for i in range(100):#Carrega automaticamente e aleatoriamente 20 titulos de eleitores
+        x = randint(1000, 9999)
+        if arvore_de_eleitores.procurarVP(x) is None:
+            arvore_de_eleitores.inserirVP(x)    #preenche a arvore de eleitores
+    arvore_de_eleitores.preorderVP(arvore_de_eleitores.getraiz())
+    print()
+
+
+def CadastrarCandidatos():
+    print("Por favor, digite o nome e número do candidato: ", end="")  #Recebe o nome e o numero do candidato
     entrada_candidato = input().split()
-    if entrada_candidato not in todos_candidatos: # se o candidato n está em tds os candidatos
-        todos_candidatos.append(entrada_candidato) # tds candidados add na lista
+    if entrada_candidato not in todos_candidatos: # se o candidato não está na lista todos_candidatos
+        todos_candidatos.append(entrada_candidato) # todos_candidatos adiciona a entrada do cadastramento na lista
         print("Candidato cadastrado com sucesso!")
         return Voltar()
-    else: # se estiver, não add
+    else: # se estiver, não adiciona
         print("Esse candidato já foi cadastrado!")
     #pos 0 nome pos 1 número do cand
 
 def VerificarTituloRB(titulo):
-    if arvore_de_eleitores.procurarVP(titulo) is not None:
+    if arvore_de_eleitores.procurarVP(titulo) is not None: #tem o titulo procurado na ARB
         print("O titulo existe no sistema")
         return True
     else:
@@ -541,7 +549,7 @@ def VerificarTituloRB(titulo):
         return False
 
 def VerificarTituloAB(titulo):
-    if arvore_de_votacao.procurarAB(titulo) is not None:
+    if arvore_de_votacao.procurarAB(titulo) is not None: #tem o titulo procurado na AB
         print("Esse titulo já realizou o voto")
         return True
     else:
@@ -565,8 +573,10 @@ def ResetArvoreVotacao():
 #e se ainda não votou, contabiliza o voto e atualiza a árvore de votação
 #que armazena os títulos de quem já votou;
 
-candidato_sem_repeticao,candidato_qntVotos,voto =[],[],[]
+
 def AdicionarVoto():
+    global olhou
+    olhou = False
     print("Digite o número do titulo e o voto: ", end="")
     titulo_voto = list(map(int, input().split()))
     if VerificarTituloRB(titulo_voto[0]) is True: #titulo valido
@@ -582,32 +592,36 @@ def AdicionarVoto():
 
 
 def ResultadoParcial():
-    if olhou is False:
+    global candidato_qntVotos
+    if olhou is False: #inserindo candidado manualmente
         for i in voto: # voto == todos os votos feitos
-            if i not in candidato_sem_repeticao:
-                candidato_sem_repeticao.append(i)  # apenas um numero por candidato
-        for a in todos_candidatos:
+            if i not in candidato_sem_repeticao: # se i não está nessa lista
+                candidato_sem_repeticao.append(i)  # essa lista add apenas um numero por candidato
+        for a in todos_candidatos: # nessa lista a[0] = nome do candidato ; a[1] = numero do candidato
             for e in candidato_sem_repeticao:
-                if int(a[1]) == e:
-                    x = a[0], voto.count(e)
+                if int(a[1]) == e: #se o numero do candidato é igual a um elemento da lista que só tem um numero por candidato
+                    x = a[0], voto.count(e) #nome do candidato , soma de todas as vezes que o elemento e aparece na lista de todos os votos realizados
                     candidato_qntVotos.append(x)
-    else: # olhou True
+        print(candidato_qntVotos)
+        Voltar()
+    else: # olhou True inserindo votos aleatorios
 
-        print(num_do_candidato_aleatorio)
-        print(todos_votos_aleatorios)
+        print("\nNúmero dos candidatos participantes: ",num_do_candidato_aleatorio)
+        print("\nTodos os votos aleatórios: ", todos_votos_aleatorios)
         for a in num_do_candidato_aleatorio:
-            x = a, todos_votos_aleatorios.count(a)
+            x =  a,todos_votos_aleatorios.count(a)
             candidato_qntVotos.append(x)
-
+    print("\nNúmero do candidato / Total de votos")
     print(candidato_qntVotos)  # printa o candidato e a qnd de votos
+    Voltar()
 
-olhou = False
+
 def GerarVotosAleatorios():
     global olhou
     global todos_votos_aleatorios
     global num_do_candidato_aleatorio
     num_do_candidato_aleatorio,todos_votos_aleatorios = [],[]
-    CarregarTitulos()
+    CarregarTitulosAleatorios()
     for i in range(5): #quantidade de candidatos
         x = randint(10, 99)
         if x not in num_do_candidato_aleatorio:
@@ -622,8 +636,9 @@ def GerarVotosAleatorios():
     Voltar()
 
 def Sair():
-    arvore_de_eleitores=None
-    arvore_de_votacao=None
+    print("\nSistema de Eleição encerrado com sucesso.\n\t   ☆☆☆☆☆ Obrigado! ☆☆☆☆☆")
+    arvore_de_eleitores = None
+    arvore_de_votacao = None
     return True
 
 
