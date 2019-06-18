@@ -512,6 +512,7 @@ def DescadastrarTitulo():
             Voltar()
 
 def CarregarTitulos():
+    print('Títulos: ')
     for i in range(100):#Carrega automaticamente e aleatoriamente 20 titulos de eleitores
         x = randint(1000, 9999)
         if arvore_de_eleitores.procurarVP(x) is None:
@@ -521,7 +522,8 @@ def CarregarTitulos():
     return Voltar()
 
 def CarregarTitulosAleatorios():
-    for i in range(100):#Carrega automaticamente e aleatoriamente 20 titulos de eleitores
+    print('Títulos: ')
+    for i in range(100):#Carrega automaticamente e aleatoriamente 100 titulos de eleitores
         x = randint(1000, 9999)
         if arvore_de_eleitores.procurarVP(x) is None:
             arvore_de_eleitores.inserirVP(x)    #preenche a arvore de eleitores
@@ -603,6 +605,13 @@ def ResultadoParcial():
                     x = a[0], voto.count(e) #nome do candidato , soma de todas as vezes que o elemento e aparece na lista de todos os votos realizados
                     candidato_qntVotos.append(x)
         print(candidato_qntVotos)
+        ganhador=0
+        for i in range(len(candidato_qntVotos)):
+             if candidato_qntVotos[i][1]>candidato_qntVotos[ganhador][1]:
+                 ganhador=i
+        print('\nGanhador:',end='')
+        print(candidato_qntVotos[ganhador])
+        print()
         Voltar()
     else: # olhou True inserindo votos aleatorios
 
@@ -611,8 +620,16 @@ def ResultadoParcial():
         for a in num_do_candidato_aleatorio:
             x =  a,todos_votos_aleatorios.count(a)
             candidato_qntVotos.append(x)
+    
     print("\nNúmero do candidato / Total de votos")
-    print(candidato_qntVotos)  # printa o candidato e a qnd de votos
+    print(candidato_qntVotos)  # printa o candidato e a qnt de votos
+    ganhador=0
+    for i in range(len(candidato_qntVotos)):
+        if candidato_qntVotos[i][1]>candidato_qntVotos[ganhador][1]:
+            ganhador=i
+    print('\nGanhador:',end='')
+    print(candidato_qntVotos[ganhador])
+    print()
     Voltar()
 
 
@@ -628,11 +645,15 @@ def GerarVotosAleatorios():
             num_do_candidato_aleatorio.append(x)
         else:
             num_do_candidato_aleatorio.append(x+1)
-    for a in range(15):
+    for a in range(100):
         y = random.choice(num_do_candidato_aleatorio)
         todos_votos_aleatorios.append(y)
 
         olhou = True
+    print ('Votos realizados:',end=' ')
+    for i in range(len(todos_votos_aleatorios)):
+        print(todos_votos_aleatorios[i], end=' ')
+    print()    
     Voltar()
 
 def Sair():
